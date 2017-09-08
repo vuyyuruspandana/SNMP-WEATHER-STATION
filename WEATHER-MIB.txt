@@ -1,0 +1,129 @@
+WEATHER-MIB DEFINITIONS ::= BEGIN
+
+--
+-- MIB objects for agent module implementations
+--
+
+IMPORTS
+    MODULE-IDENTITY, OBJECT-TYPE, Integer32, enterprises,
+    NOTIFICATION-TYPE                       FROM SNMPv2-SMI
+    SnmpAdminString                         FROM SNMP-FRAMEWORK-MIB
+    OBJECT-TYPE
+		FROM RFC-1212
+    DisplayString
+		FROM RFC-1213
+;
+
+weatherModule MODULE-IDENTITY
+    LAST-UPDATED "201705200000Z"
+    ORGANIZATION "www.weather.org"
+    CONTACT-INFO    
+	 "    "
+    DESCRIPTION
+	"   "
+    ::= { enterprises 777 }
+
+
+--
+-- top level structure
+--
+weatherCurrent OBJECT IDENTIFIER ::= { weatherModule 1 }
+weatherTables  OBJECT IDENTIFIER ::= { weatherModule 2 }
+
+
+temperature OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+	"This object reads the temperature"
+::= { weatherCurrent 1 }
+
+humidity OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+	"This object reads the humidity"
+::= { weatherCurrent 2 }
+
+pressure OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+	"This object reads the pressure"
+::= { weatherCurrent 3 }
+
+location OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+	"This object reads the location"
+::= { weatherCurrent 4 }
+
+date OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+	"This object reads the date"
+::= { weatherCurrent 5 }
+
+windspeed OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+	"This object reads the windspeed"
+::= { weatherCurrent 6 }
+
+weatherTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF TableEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+	"   "
+    ::= { weatherTables 1 }
+
+tableEntry OBJECT-TYPE
+    SYNTAX      TableEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+	"   "
+    INDEX   { tableDate }
+    ::= { weatherTable 1 }
+
+TableEntry ::= SEQUENCE {
+	tableDate	OCTET STRING,
+	tableTemperature	OCTET STRING,
+	tableHumidity	OCTET STRING
+}
+
+tableDate OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE(1..32))
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+	"Table entry for date   "
+    ::= { tableEntry 1 }
+
+tableTemperature OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION
+	"table entry for temp "
+    ::= { tableEntry 2 }
+
+tableHumidity OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION
+	" table entry for humidity  "
+    ::= { tableEntry 3 }
+
+END
